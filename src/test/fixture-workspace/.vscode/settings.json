@@ -1,0 +1,5 @@
+{
+  "terminalManager.enabled": true,
+  "terminalManager.autoRestoreOnStartup": false,
+  "terminalManager.claudeCorrelation.enabled": false
+}

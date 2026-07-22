@@ -1,0 +1,122 @@
+{
+  "name": "terminal-manager",
+  "displayName": "Terminal Manager",
+  "description": "Saves and restores your terminals (Claude Code sessions, docker/podman/kubectl log watchers, SSH sessions, plain shells) across VS Code restarts.",
+  "version": "0.1.0",
+  "publisher": "jeremyfriesen",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "terminal",
+    "session",
+    "claude",
+    "docker",
+    "podman",
+    "kubernetes",
+    "kubectl",
+    "ssh",
+    "restore",
+    "workspace"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "terminalManager.saveStateNow",
+        "title": "Terminal Manager: Save Terminal State Now"
+      },
+      {
+        "command": "terminalManager.restoreStateNow",
+        "title": "Terminal Manager: Restore Terminal State Now"
+      },
+      {
+        "command": "terminalManager.clearState",
+        "title": "Terminal Manager: Clear Saved Terminal State"
+      },
+      {
+        "command": "terminalManager.enable",
+        "title": "Terminal Manager: Enable"
+      },
+      {
+        "command": "terminalManager.disable",
+        "title": "Terminal Manager: Disable"
+      },
+      {
+        "command": "terminalManager.enableLogging",
+        "title": "Terminal Manager: Enable Logging"
+      },
+      {
+        "command": "terminalManager.disableLogging",
+        "title": "Terminal Manager: Disable Logging"
+      }
+    ],
+    "configuration": {
+      "title": "Terminal Manager",
+      "properties": {
+        "terminalManager.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable terminal state tracking and restore for this workspace. Off by default -- having a saved terminal-state.json and the extension installed is not enough on its own; each project must opt in explicitly via this workspace setting."
+        },
+        "terminalManager.autoRestoreOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically restore saved terminals when a workspace finishes loading."
+        },
+        "terminalManager.restoreDelayMs": {
+          "type": "number",
+          "default": 1500,
+          "description": "Delay (ms) after startup before restoring terminals, to let the window settle."
+        },
+        "terminalManager.restoreStaggerMs": {
+          "type": "number",
+          "default": 150,
+          "description": "Delay (ms) between creating each restored terminal, so restoring many terminals at once doesn't spawn all of their processes in one burst. Negligible for a handful of terminals; smooths out the spike for dozens."
+        },
+        "terminalManager.claudeCorrelation.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Attempt to correlate Claude Code terminals with their exact session ID for --resume. When disabled, Claude terminals always restore via the interactive picker."
+        },
+        "terminalManager.debugLogging": {
+          "type": "boolean",
+          "default": false,
+          "description": "Also write debug logs to .vscode/terminal-manager.log (in addition to the always-on 'Terminal Manager' Output channel). Off by default -- this file grows unboundedly with no rotation, so only turn it on while actively diagnosing an issue."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "npm run compile && vscode-test",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.x",
+    "@types/vscode": "^1.93.0",
+    "@typescript-eslint/eslint-plugin": "^7.x",
+    "@typescript-eslint/parser": "^7.x",
+    "@vscode/test-cli": "^0.0.15",
+    "@vscode/test-electron": "^3.0.0",
+    "@vscode/vsce": "^2.x",
+    "eslint": "^8.x",
+    "mocha": "^11.7.6",
+    "typescript": "^5.x",
+    "vitest": "^4.1.10"
+  }
+}

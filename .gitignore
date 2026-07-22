@@ -1,0 +1,8 @@
+out/
+node_modules/
+*.vsix
+.vscode/terminal-state.json
+.vscode/terminal-manager.log
+.vscode-test/
+src/test/fixture-workspace/.vscode/terminal-state.json
+src/test/fixture-workspace/.vscode/terminal-manager.log
