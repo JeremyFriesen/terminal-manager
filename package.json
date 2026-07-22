@@ -1,5 +1,5 @@
 {
-  "name": "terminal-manager",
+  "name": "terminal-state-manager",
   "displayName": "Terminal Manager",
   "description": "Saves and restores your terminals (Claude Code sessions, docker/podman/kubectl log watchers, SSH sessions, plain shells) across VS Code restarts.",
   "version": "0.1.0",
