@@ -2,7 +2,7 @@ const REDACTED = '***REDACTED***';
 
 /**
  * Best-effort scrub of common secret shapes before a command line is written
- * to terminal-state.json (or the debug log). Deliberately conservative --
+ * to terminal-state-manager.json (or the debug log). Deliberately conservative --
  * only long, unambiguous flag names are matched (not bare `-p`, which is a
  * port number in half the CLIs that use it: docker -p, ssh -p, scp -P) so a
  * legitimate command isn't mangled. This is not a guarantee every secret shape

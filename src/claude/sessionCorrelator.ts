@@ -216,9 +216,9 @@ export function buildCorrelationResult(
       resumeMode: 'interactive-fallback',
       warning:
         `Installed Claude Code version (${installedVersion ?? 'unknown'}) differs from the version ` +
-        `Terminal Manager was tested against (${TESTED_CLAUDE_VERSION}). Session auto-resume may be ` +
+        `Terminal State Manager was tested against (${TESTED_CLAUDE_VERSION}). Session auto-resume may be ` +
         'unreliable, so this terminal will fall back to the interactive --resume picker. ' +
-        'Terminal Manager may need an update to support this Claude Code version.',
+        'Terminal State Manager may need an update to support this Claude Code version.',
     };
   }
 

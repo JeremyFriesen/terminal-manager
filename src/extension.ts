@@ -19,7 +19,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // when currently disabled, and vice versa.
   registerToggleCommands(context);
 
-  // Having a saved terminal-state.json and the extension installed is
+  // Having a saved terminal-state-manager.json and the extension installed is
   // deliberately not enough on its own -- each workspace must opt in via this
   // setting, so installing the extension for one project can't silently start
   // tracking/restoring terminals in every other workspace you happen to open.

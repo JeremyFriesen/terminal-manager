@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
 
-export const EXTENSION_ID = 'jeremyfriesen.terminal-manager';
+export const EXTENSION_ID = 'jeremyfriesen.terminal-state-manager';
 
 export async function activateExtension(): Promise<vscode.Extension<unknown>> {
   const ext = vscode.extensions.getExtension(EXTENSION_ID);
@@ -26,7 +26,7 @@ export function stateFilePath(): string {
   if (!folder) {
     throw new Error('No workspace folder open -- fixture workspace failed to load.');
   }
-  return path.join(folder.uri.fsPath, '.vscode', 'terminal-state.json');
+  return path.join(folder.uri.fsPath, '.vscode', 'terminal-state-manager.json');
 }
 
 export async function readStateFile(): Promise<RawStateFile | undefined> {

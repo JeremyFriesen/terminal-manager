@@ -12,20 +12,20 @@ export function registerCommands(
   context.subscriptions.push(
     vscode.commands.registerCommand('terminalManager.saveStateNow', async () => {
       await tracker.flush();
-      void vscode.window.showInformationMessage('Terminal Manager: state saved.');
+      void vscode.window.showInformationMessage('Terminal State Manager: state saved.');
     }),
     vscode.commands.registerCommand('terminalManager.restoreStateNow', async () => {
       await restoreTerminals(repository, tracker.currentNameCounts());
     }),
     vscode.commands.registerCommand('terminalManager.clearState', async () => {
       await repository.save(emptyState());
-      void vscode.window.showInformationMessage('Terminal Manager: saved state cleared.');
+      void vscode.window.showInformationMessage('Terminal State Manager: saved state cleared.');
     }),
   );
 }
 
 const DISABLED_MESSAGE =
-  'Terminal Manager is disabled for this workspace. Set "terminalManager.enabled": true in this workspace\'s ' +
+  'Terminal State Manager is disabled for this workspace. Set "terminalManager.enabled": true in this workspace\'s ' +
   'settings and reload the window to use it.';
 
 /** Keeps the commands visible/discoverable in the Command Palette even when off, rather than having them silently not exist. */
@@ -49,7 +49,7 @@ async function updateWorkspaceSetting(key: string, value: boolean, friendlyName:
     await vscode.workspace.getConfiguration('terminalManager').update(key, value, vscode.ConfigurationTarget.Workspace);
   } catch (err) {
     void vscode.window.showErrorMessage(
-      `Terminal Manager: couldn't update "${friendlyName}" -- ${err instanceof Error ? err.message : String(err)}`,
+      `Terminal State Manager: couldn't update "${friendlyName}" -- ${err instanceof Error ? err.message : String(err)}`,
     );
     return;
   }
@@ -58,7 +58,7 @@ async function updateWorkspaceSetting(key: string, value: boolean, friendlyName:
   // effect live -- offer to reload rather than leaving the user to guess why
   // nothing changed.
   const choice = await vscode.window.showInformationMessage(
-    `Terminal Manager: ${friendlyName} ${value ? 'enabled' : 'disabled'} for this workspace. Reload the window for it to take effect.`,
+    `Terminal State Manager: ${friendlyName} ${value ? 'enabled' : 'disabled'} for this workspace. Reload the window for it to take effect.`,
     'Reload Window',
   );
   if (choice === 'Reload Window') {
@@ -95,7 +95,7 @@ export async function maybeShowEnablePrompt(context: vscode.ExtensionContext): P
   }
 
   const choice = await vscode.window.showInformationMessage(
-    'Terminal Manager is available for this workspace but not enabled. Enable it to start tracking and restoring terminals here.',
+    'Terminal State Manager is available for this workspace but not enabled. Enable it to start tracking and restoring terminals here.',
     'Enable',
     "Don't show again",
   );

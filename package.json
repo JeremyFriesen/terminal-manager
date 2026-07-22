@@ -1,6 +1,6 @@
 {
   "name": "terminal-state-manager",
-  "displayName": "Terminal Manager",
+  "displayName": "Terminal State Manager",
   "description": "Saves and restores your terminals (Claude Code sessions, docker/podman/kubectl log watchers, SSH sessions, plain shells) across VS Code restarts.",
   "version": "0.1.0",
   "publisher": "jeremyfriesen",
@@ -40,40 +40,40 @@
     "commands": [
       {
         "command": "terminalManager.saveStateNow",
-        "title": "Terminal Manager: Save Terminal State Now"
+        "title": "Terminal State Manager: Save Terminal State Now"
       },
       {
         "command": "terminalManager.restoreStateNow",
-        "title": "Terminal Manager: Restore Terminal State Now"
+        "title": "Terminal State Manager: Restore Terminal State Now"
       },
       {
         "command": "terminalManager.clearState",
-        "title": "Terminal Manager: Clear Saved Terminal State"
+        "title": "Terminal State Manager: Clear Saved Terminal State"
       },
       {
         "command": "terminalManager.enable",
-        "title": "Terminal Manager: Enable"
+        "title": "Terminal State Manager: Enable"
       },
       {
         "command": "terminalManager.disable",
-        "title": "Terminal Manager: Disable"
+        "title": "Terminal State Manager: Disable"
       },
       {
         "command": "terminalManager.enableLogging",
-        "title": "Terminal Manager: Enable Logging"
+        "title": "Terminal State Manager: Enable Logging"
       },
       {
         "command": "terminalManager.disableLogging",
-        "title": "Terminal Manager: Disable Logging"
+        "title": "Terminal State Manager: Disable Logging"
       }
     ],
     "configuration": {
-      "title": "Terminal Manager",
+      "title": "Terminal State Manager",
       "properties": {
         "terminalManager.enabled": {
           "type": "boolean",
           "default": false,
-          "description": "Enable terminal state tracking and restore for this workspace. Off by default -- having a saved terminal-state.json and the extension installed is not enough on its own; each project must opt in explicitly via this workspace setting."
+          "description": "Enable terminal state tracking and restore for this workspace. Off by default -- having a saved terminal-state-manager.json and the extension installed is not enough on its own; each project must opt in explicitly via this workspace setting."
         },
         "terminalManager.autoRestoreOnStartup": {
           "type": "boolean",
@@ -98,7 +98,7 @@
         "terminalManager.debugLogging": {
           "type": "boolean",
           "default": false,
-          "description": "Also write debug logs to .vscode/terminal-manager.log (in addition to the always-on 'Terminal Manager' Output channel). Off by default -- this file grows unboundedly with no rotation, so only turn it on while actively diagnosing an issue."
+          "description": "Also write debug logs to .vscode/terminal-state-manager.log (in addition to the always-on 'Terminal State Manager' Output channel). Off by default -- this file grows unboundedly with no rotation, so only turn it on while actively diagnosing an issue."
         }
       }
     }

@@ -16,7 +16,7 @@ let logFilePath: string | undefined;
  * user's workspace by default.
  */
 export function initLogging(context: vscode.ExtensionContext): void {
-  channel = vscode.window.createOutputChannel('Terminal Manager');
+  channel = vscode.window.createOutputChannel('Terminal State Manager');
   context.subscriptions.push(channel);
 
   const debugLogging = vscode.workspace.getConfiguration('terminalManager').get<boolean>('debugLogging', false);
@@ -25,7 +25,7 @@ export function initLogging(context: vscode.ExtensionContext): void {
     const dir = path.join(folder.uri.fsPath, '.vscode');
     try {
       fs.mkdirSync(dir, { recursive: true });
-      logFilePath = path.join(dir, 'terminal-manager.log');
+      logFilePath = path.join(dir, 'terminal-state-manager.log');
     } catch {
       logFilePath = undefined;
     }

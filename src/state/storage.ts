@@ -14,7 +14,7 @@ class WorkspaceFileStateRepository implements StateRepository {
     if (!folder) {
       return undefined;
     }
-    return vscode.Uri.joinPath(folder.uri, '.vscode', 'terminal-state.json');
+    return vscode.Uri.joinPath(folder.uri, '.vscode', 'terminal-state-manager.json');
   }
 
   async load(): Promise<WorkspaceTerminalState> {

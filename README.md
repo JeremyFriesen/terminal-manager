@@ -1,14 +1,14 @@
-# Terminal Manager
+# Terminal State Manager
 
 Saves your open terminals to a per-workspace JSON file as they change, and restores them the next time VS Code opens the workspace.
 
 ## Enabling it
 
-Off by default, per workspace. Having the extension installed and a `.vscode/terminal-state.json` file with entries in it is deliberately **not** enough on its own — each project must opt in explicitly.
+Off by default, per workspace. Having the extension installed and a `.vscode/terminal-state-manager.json` file with entries in it is deliberately **not** enough on its own — each project must opt in explicitly.
 
 The first time the extension activates in a workspace where it's disabled, it shows a one-time notification pointing you at the **Enable** command directly, so you don't have to already know it exists. Dismissing it (or clicking "Don't show again") won't show it again in that workspace, but doesn't suppress it anywhere else — it's tracked per-workspace, not globally.
 
-Run **Terminal Manager: Enable** from the Command Palette and click "Reload Window" when prompted (the setting is only read once at startup, so nothing happens without a reload). To turn it back off later, run **Terminal Manager: Disable**.
+Run **Terminal State Manager: Enable** from the Command Palette and click "Reload Window" when prompted (the setting is only read once at startup, so nothing happens without a reload). To turn it back off later, run **Terminal State Manager: Disable**.
 
 This writes `"terminalManager.enabled": true` to *this workspace's* configuration specifically — never Global/User settings — so enabling it for one project can't silently turn tracking/restoring on in every other workspace you happen to open.
 
@@ -27,7 +27,7 @@ Equivalent by hand, if you'd rather skip the command — add this to whichever o
 }
 ```
 
-Debug logging (see `terminalManager.debugLogging` below) has the same pair of commands: **Terminal Manager: Enable Logging** / **Terminal Manager: Disable Logging**.
+Debug logging (see `terminalManager.debugLogging` below) has the same pair of commands: **Terminal State Manager: Enable Logging** / **Terminal State Manager: Disable Logging**.
 
 ## What it restores
 
@@ -51,7 +51,7 @@ There's also a name-based backup classifier (`classifyTerminalName` in `classify
 
 ### Secrets are redacted before anything is written to disk
 
-Any command classified as a watched command has its `command` text run through a best-effort redaction (`src/tracking/redact.ts`) before it's stored in `terminal-state.json` — inline `KEY=value` assignments that look secret-shaped (`API_KEY`, `*_TOKEN`, `*_PASSWORD`, etc.), long-form CLI flags (`--password`, `--api-key`, `--token`, ...), passwords embedded in `scheme://user:password@host` URLs, and `Authorization: Bearer <token>` headers all get replaced with `***REDACTED***`. The same redaction is applied to the debug log (`.vscode/terminal-manager.log`), not just the state file.
+Any command classified as a watched command has its `command` text run through a best-effort redaction (`src/tracking/redact.ts`) before it's stored in `terminal-state-manager.json` — inline `KEY=value` assignments that look secret-shaped (`API_KEY`, `*_TOKEN`, `*_PASSWORD`, etc.), long-form CLI flags (`--password`, `--api-key`, `--token`, ...), passwords embedded in `scheme://user:password@host` URLs, and `Authorization: Bearer <token>` headers all get replaced with `***REDACTED***`. The same redaction is applied to the debug log (`.vscode/terminal-state-manager.log`), not just the state file.
 
 This is deliberately conservative — bare `-p` is left alone since it's a port number in half the CLIs that use it (`docker -p`, `ssh -p`), not a password — so it's a meaningful reduction in what ends up readable on disk, not a guarantee every secret shape is caught. It also means restoring a terminal whose original command contained a secret will replay a broken/incomplete command rather than a working one; that's the intended tradeoff, not a bug — never keep a secret readable on disk just to make one-click resume more convenient.
 
@@ -68,18 +68,18 @@ VS Code's extension API cannot reattach to a previously running terminal process
 | `terminalManager.restoreDelayMs` | `1500` | Delay before restoring, so the window has time to settle. |
 | `terminalManager.restoreStaggerMs` | `150` | Delay between creating each restored terminal, so restoring many at once doesn't spawn all of their processes in one burst. |
 | `terminalManager.claudeCorrelation.enabled` | `true` | Attempt exact Claude session correlation. When off, Claude terminals always restore via the interactive picker. |
-| `terminalManager.debugLogging` | `false` | Also write debug logs to `.vscode/terminal-manager.log`, in addition to the always-on "Terminal Manager" Output channel. Grows unboundedly with no rotation, so leave off unless actively diagnosing an issue. |
+| `terminalManager.debugLogging` | `false` | Also write debug logs to `.vscode/terminal-state-manager.log`, in addition to the always-on "Terminal State Manager" Output channel. Grows unboundedly with no rotation, so leave off unless actively diagnosing an issue. |
 
 ## Commands
 
-- **Terminal Manager: Save Terminal State Now**
-- **Terminal Manager: Restore Terminal State Now**
-- **Terminal Manager: Clear Saved Terminal State**
+- **Terminal State Manager: Save Terminal State Now**
+- **Terminal State Manager: Restore Terminal State Now**
+- **Terminal State Manager: Clear Saved Terminal State**
 
 These three stay visible in the Command Palette even when `terminalManager.enabled` is off, but just point you at the setting instead of doing anything.
 
-- **Terminal Manager: Enable** / **Terminal Manager: Disable** — sets `terminalManager.enabled` at Workspace configuration scope (`.vscode/settings.json`, or the `.code-workspace` file's `"settings"` block — see "Enabling it" above for which one applies; never Global/User either way, so this stays per-project opt-in) and offers to reload the window, since the setting is only read once at startup.
-- **Terminal Manager: Enable Logging** / **Terminal Manager: Disable Logging** — same, for `terminalManager.debugLogging`.
+- **Terminal State Manager: Enable** / **Terminal State Manager: Disable** — sets `terminalManager.enabled` at Workspace configuration scope (`.vscode/settings.json`, or the `.code-workspace` file's `"settings"` block — see "Enabling it" above for which one applies; never Global/User either way, so this stays per-project opt-in) and offers to reload the window, since the setting is only read once at startup.
+- **Terminal State Manager: Enable Logging** / **Terminal State Manager: Disable Logging** — same, for `terminalManager.debugLogging`.
 
 These four always work regardless of the current `enabled` state (in particular, **Enable** has to work while currently disabled).
 
@@ -101,7 +101,7 @@ Restoring a large number of terminals at once is staggered (`terminalManager.res
 
 ## Where state is stored
 
-State lives at `.vscode/terminal-state.json` in the workspace (gitignored) — this is intentional, not a dev-only stand-in, so it's easy to open and inspect by hand.
+State lives at `.vscode/terminal-state-manager.json` in the workspace (gitignored) — this is intentional, not a dev-only stand-in, so it's easy to open and inspect by hand.
 
 **Don't leave it open in an editor tab with Auto Save on (or manually save it).** It's a generated file the extension rewrites on every change, not something to hand-edit as a matter of routine. The specific failure mode: VS Code's hot-exit feature can preserve a dirty (unsaved) editor buffer across a full window close and restore it when the window reopens; if that stale buffer then gets saved — Auto Save, or a manual Ctrl+S — it silently overwrites whatever the extension had correctly written, and since the extension isn't running during that gap, there's no way for it to have prevented it. While the extension *is* running, it does defend against this — any external save to this exact file gets immediately overwritten with its own in-memory state (see `onExternalSave` in `terminalTracker.ts`) — but that can't help for a save that happens before the window (and the extension with it) has even finished reopening.
 
@@ -123,7 +123,7 @@ The thin glue that actually calls real VS Code APIs (`vscode.window.createTermin
 Runs against a real (headless) VS Code instance via `@vscode/test-electron` / `@vscode/test-cli`, using the fixture workspace at `src/test/fixture-workspace` (which has `terminalManager.enabled: true` and `autoRestoreOnStartup: false` pre-set in its `.vscode/settings.json`, so each test controls restore explicitly rather than racing a startup timer). Source files live at `src/test/*.itest.ts` — the `.itest.ts` suffix (not `.test.ts`) is deliberate, so these are never picked up by vitest's own default include pattern and never need excluding from it, and vice versa.
 
 - `activation.itest.ts` — the extension actually activates against the real API and reports itself active; all 7 commands are registered; the fixture workspace's `enabled` setting was read correctly.
-- `lifecycle.itest.ts` — opening a real terminal is tracked and written to the real `.vscode/terminal-state.json` in the fixture workspace; closing one of several removes just that one; closing the *last* one does **not** wipe the file (the window-close guard, verified end-to-end against real `onDidOpenTerminal`/`onDidCloseTerminal` events rather than the pure function alone).
+- `lifecycle.itest.ts` — opening a real terminal is tracked and written to the real `.vscode/terminal-state-manager.json` in the fixture workspace; closing one of several removes just that one; closing the *last* one does **not** wipe the file (the window-close guard, verified end-to-end against real `onDidOpenTerminal`/`onDidCloseTerminal` events rather than the pure function alone).
 - `classification.itest.ts` — a real shell (PowerShell) command typed into a real terminal is classified correctly by the live `onDidStartTerminalShellExecution` event, for both an exact-mode Claude resume and a watched-command (`docker logs`), and reverts to plain when the command ends. Since neither `claude` nor `docker` need to actually be installed for this (classification only reads the typed command line), each command is chained with `; Start-Sleep -Seconds N` so the shell execution stays alive long enough to observe on disk before the post-command revert fires.
 - `restore.itest.ts` — `terminalManager.restoreStateNow` actually creates a real terminal from a pre-seeded state file, and does not duplicate one that's already open under the same name.
 
